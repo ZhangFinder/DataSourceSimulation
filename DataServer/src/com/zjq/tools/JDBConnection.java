@@ -6,29 +6,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 /***
- * Êı¾İ¿âÁ¬½Ó¹¤¾ß
+ * æ•°æ®åº“è¿æ¥å·¥å…·
  * @author ZJQ
  * **/
 public class JDBConnection {
-	private final String dbDriver = "com.mysql.jdbc.Driver"; // ÉèÖÃSQL
+	private final String dbDriver = "com.mysql.jdbc.Driver"; // è®¾ç½®SQL
 	String url = "jdbc:mysql://localhost:3306/sshexample?user=root&password="
 		+ "zjq1048826985&characterEncoding=utf-8";
 
 	private ResultSet rs = null;
 	private Statement stmt = null;
 	private Connection con = null;
-	// Í¨¹ı¹¹Ôì·½·¨¼ÓÔØÊı¾İ¿âÇı¶¯
+	// é€šè¿‡æ„é€ æ–¹æ³•åŠ è½½æ•°æ®åº“é©±åŠ¨
 	public JDBConnection(){
 		try{
-			Class.forName(dbDriver).newInstance();//Í¨¹ıJava·´Éä»úÖÆ½øĞĞ¼ÓÔØÊı¾İ¿âÇı¶¯²Ù×÷
+			Class.forName(dbDriver).newInstance();//é€šè¿‡Javaåå°„æœºåˆ¶è¿›è¡ŒåŠ è½½æ•°æ®åº“é©±åŠ¨æ“ä½œ
 		}catch(Exception e){
-			System.out.println("Êı¾İ¿â¼ÓÔØÊ§°Ü");
+			System.out.println("æ•°æ®åº“åŠ è½½å¤±è´¥");
 		}
 	} 
-	//´´½¨Êı¾İ¿âÁ¬½Ó
+	//åˆ›å»ºæ•°æ®åº“è¿æ¥
 	public boolean createConnection(){
 		try{
-			con=DriverManager.getConnection(url);//¸ù¾İÓÃ»§Ãû£¬urlµØÖ·ÒÔ¼°ÃÜÂë½øĞĞÊı¾İÁ¬½Ó²Ù×÷
+			con=DriverManager.getConnection(url);//æ ¹æ®ç”¨æˆ·åï¼Œurlåœ°å€ä»¥åŠå¯†ç è¿›è¡Œæ•°æ®è¿æ¥æ“ä½œ
 			con.setAutoCommit(true);
 			return true;
 		}catch(SQLException e){
@@ -37,30 +37,30 @@ public class JDBConnection {
 			return false;
 		}
 	}
-	//¶ÔÊı¾İ¿âµÄÔö¼Ó¡¢ĞŞ¸ÄºÍÉ¾³ıµÄ²Ù×÷
+	//å¯¹æ•°æ®åº“çš„å¢åŠ ã€ä¿®æ”¹å’Œåˆ é™¤çš„æ“ä½œ
 	public boolean executeUpdate(String sql){
-		if(con==null){//µ±con¶ÔÏóÎª¿Õ£¬½øĞĞcreatConnection·½·¨,ÊµÏÖÊı¾İ¿âÁ¬½Ó²Ù×÷
+		if(con==null){//å½“conå¯¹è±¡ä¸ºç©ºï¼Œè¿›è¡ŒcreatConnectionæ–¹æ³•,å®ç°æ•°æ®åº“è¿æ¥æ“ä½œ
 			createConnection();
 		}
 		try{
 			 stmt=con.createStatement();
-		    int iCount =stmt.executeUpdate(sql);//Ö´ĞĞ²ÎÊıSQLÓï¾ä
-		//    System.out.println("²Ù×÷³É¹¦£¬ËùÓ°ÏìµÄ¼ÇÂ¼ÊıÎª£º"+String.valueOf(iCount));//ÔÚ¿ØÖÆÌ¨ÖĞÏÔÊ¾Ö´ĞĞµÄ½á¹û
+		    int iCount =stmt.executeUpdate(sql);//æ‰§è¡Œå‚æ•°SQLè¯­å¥
+		//    System.out.println("æ“ä½œæˆåŠŸï¼Œæ‰€å½±å“çš„è®°å½•æ•°ä¸ºï¼š"+String.valueOf(iCount));//åœ¨æ§åˆ¶å°ä¸­æ˜¾ç¤ºæ‰§è¡Œçš„ç»“æœ
 		    return true;
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			return false;
 		}
 	}
-	//¶ÔÊı¾İ¿âµÄ²éÑ¯µÄ²Ù×÷
+	//å¯¹æ•°æ®åº“çš„æŸ¥è¯¢çš„æ“ä½œ
 	public ResultSet executeQuery(String sql){
 		try{
-		   if(con ==null){ //µ±con¶ÔÏóÎªnull,È¡µÃÊı¾İ¿âÁ¬½Ó²Ù×÷
+		   if(con ==null){ //å½“conå¯¹è±¡ä¸ºnull,å–å¾—æ•°æ®åº“è¿æ¥æ“ä½œ
 			   createConnection();
 		   }	
 		    stmt=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		   try{
-			   rs =stmt.executeQuery(sql);//Ö´ĞĞ²ÎÊıÖĞµÄSQLÓï¾ä
+			   rs =stmt.executeQuery(sql);//æ‰§è¡Œå‚æ•°ä¸­çš„SQLè¯­å¥
 			   
 		   }catch(SQLException e){
 			  // System.out.println(e.getMessage());
@@ -71,9 +71,9 @@ public class JDBConnection {
 			//System.out.println("executeQueryError");
 			return null;
 		}
-		return rs;//½«²éÑ¯µÄ½á¹ûÍ¨¹ı¹Ø¼ü×Öreturn ½øĞĞ²éÑ¯
+		return rs;//å°†æŸ¥è¯¢çš„ç»“æœé€šè¿‡å…³é”®å­—return è¿›è¡ŒæŸ¥è¯¢
 	}
-	//¹Ø±ÕÊı¾İ¿âµÄ²Ù×÷
+	//å…³é—­æ•°æ®åº“çš„æ“ä½œ
 	public void closeConnection(){
 		if (null != rs) {
 			try {

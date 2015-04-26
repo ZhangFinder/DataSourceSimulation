@@ -3,50 +3,97 @@ package com.zjq.tools;
 import java.util.Random;
 
 public class RandomData {
+	  private static int productId[];
 	/***
-	    * Ëæ»ú²úÉúµçÑ¹Öµ£¬µçÑ¹ÔÚÔÚ219-221Ö®¼ä,±£Áô2Î»Ğ¡Êı
+	    * éšæœºäº§ç”Ÿç”µå‹å€¼ï¼Œç”µå‹åœ¨åœ¨219-221ä¹‹é—´,ä¿ç•™2ä½å°æ•°
 	    * ****/
 	   public static String getVoltage(Random random){
 		   float data;
 		   data=random.nextFloat();
 		   data *=(random.nextBoolean()? 1: -1);
 		   data +=220;
-		   data=(float)(Math.round(data*100))/100;//±£Áô2Î»Ğ¡Êı
+		   data=(float)(Math.round(data*100))/100;//ä¿ç•™2ä½å°æ•°
 		   return String.valueOf(data);
 	   }
 	   /***
-	    * Ëæ»ú²úÉúµçÁ÷Öµ£¬µçÁ÷ÖµÔÚ0-2Ö®¼ä,±£Áô2Î»Ğ¡Êı
+	    * éšæœºäº§ç”Ÿç”µæµå€¼ï¼Œç”µæµå€¼åœ¨0-2ä¹‹é—´,ä¿ç•™2ä½å°æ•°
 	    * **/
 	   public static String getCurrent(Random random){
 		   float data;
 		   data=random.nextFloat();
 		   data *=(random.nextBoolean()? 1: -1);
 		   data +=1;
-		   data=(float)(Math.round(data*100))/100;//±£Áô2Î»Ğ¡Êı
+		   data=(float)(Math.round(data*100))/100;//ä¿ç•™2ä½å°æ•°
 		   return String.valueOf(data);  
 	   }
 	   /****
-	    * Ëæ»ú²úÉúÎÂ¶ÈÖµ,ÎÂ¶ÈÖµÔÚ24-32Ö®¼ä,±£Áô2Î»Ğ¡Êı
+	    * éšæœºäº§ç”Ÿæ¸©åº¦å€¼,æ¸©åº¦å€¼åœ¨24-32ä¹‹é—´,ä¿ç•™2ä½å°æ•°
 	    * ***/
 	   public static String getTemp(Random random){
 		   float data;
 		   data=random.nextFloat()*4;
 		   data *=(random.nextBoolean()? 1: -1);
 		   data +=28;
-		   data=(float)(Math.round(data*100))/100;//±£Áô2Î»Ğ¡Êı
+		   data=(float)(Math.round(data*100))/100;//ä¿ç•™2ä½å°æ•°
 		   return String.valueOf(data);  
 	   }
 	   /**
-	    * Ëæ»ú²úÉúÊª¶ÈÖµ£¬Êª¶ÈÖµÔÚ0.25-0.65Ö®¼ä£¬ÖĞ¼äÖµÎª0.45£¬±£Áô2Î»Ğ¡Êı
+	    * éšæœºäº§ç”Ÿæ¹¿åº¦å€¼ï¼Œæ¹¿åº¦å€¼åœ¨0.25-0.65ä¹‹é—´ï¼Œä¸­é—´å€¼ä¸º0.45ï¼Œä¿ç•™2ä½å°æ•°
 	    * **/
 	   public static String getDampness(Random random){
 		   float data;
 		   data=(float) (0.25+random.nextInt(40)*1.0f/100);
-		   data=(float)(Math.round(data*100))/100;//±£Áô2Î»Ğ¡Êı
+		   data=(float)(Math.round(data*100))/100;//ä¿ç•™2ä½å°æ•°
 		   return String.valueOf(data); 
 	   }
+	   /**
+	    * æ ¹æ®ç›‘æµ‹ç‚¹Idè·å–è¯¥ç›‘æµ‹ç‚¹æ‰€æœ‰ä¼ æ„Ÿå™¨æ•°æ®
+	    * ******/
 	   public static String getSenseDataByAddrId(int addrId,Random random){
 		   return addrId+"-"+getVoltage(random)+"-"+getCurrent(random)+"-"+getTemp(random)+"-"+getDampness(random);
 	   }
-	   
+	   /***
+	    *éšæœºäº§ç”Ÿ5ä¸ªä¸åŒçš„äº§å“ç¼–å·id ,èŒƒå›´ä¸º0-20;
+	    * **/
+	   public static int[] getRandomProductId(Random random){
+		   int product[] = new int[5];
+		   product[0]=random.nextInt(20);
+		   boolean flag;
+		   for(int i=1;i<5;i++){
+			   do{
+				   flag =false;
+				   product[i]=random.nextInt(20);
+				   for(int j=0;j<i;j++){
+					   if(product[i]==product[j]){
+						   flag=true;
+						   break;
+					   }
+				   }
+			   }while(flag);
+		   }
+		   return product;
+	   }
+	   /***
+	    * éšæœºäº§ç”ŸåŠ å·¥ç¨‹åº¦id,idä¸º0-6
+	    * *****/
+	   public static int getStateId(Random random){
+		   return random.nextInt(6);
+	   }
+	   /****
+	    * è·å–äº§å“ç¼–å·ï¼ŒèŒƒå›´ä¸º1-20
+	    * *****/
+	   public static int getProductId(int addrId,Random random){
+		   if(addrId==0){
+			  
+			   RandomData.productId=getRandomProductId(random);
+		   }
+		   return RandomData.productId[addrId];
+	   }
+	   /**
+	    * æ ¹æ®ç›‘æµ‹ç‚¹Idè·å–è¯¥ç›‘æµ‹ç‚¹çš„RFIDæ•°æ®
+	    *
+	    * ******/
+	   public static String getRfidDataByAddrId(int addrId,Random random){
+		   return addrId+"-"+getProductId(addrId,random)+"-"+getStateId(random);
+	   }
 }

@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.zjq.dao.RfidDataDao;
 import com.zjq.dao.SenseDataDao;
+import com.zjq.model.RfidData;
 import com.zjq.model.SenseData;
 
 public class Server {
@@ -19,21 +21,21 @@ public class Server {
 		} catch (IOException e1) {
 			System.out.println(e1);
 		}
-		System.out.println("·şÎñÆ÷¶ËÕıÔÚÔËĞĞ");
+		System.out.println("æœåŠ¡å™¨ç«¯æ­£åœ¨è¿è¡Œ");
 		Socket client = null;
 		while (flag) {
 
 			try {
-				client = server.accept();// ¶ÂÈû×´Ì¬£¬³ı·ÇÓĞ¿Í»§ºô½Ğ
+				client = server.accept();// å µå¡çŠ¶æ€ï¼Œé™¤éæœ‰å®¢æˆ·å‘¼å«
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			if (client != null) {
-				System.out.println("µ±Ç°¹²ÒÑÁ¬½Ó" + (++clientCount) + "¸ö¿Í»§¶Ë");
+				System.out.println("å½“å‰å…±å·²è¿æ¥" + (++clientCount) + "ä¸ªå®¢æˆ·ç«¯");
 				new Thread(new ServerThread(client)).start();
 			}
 		}
-		System.out.println("·şÎñÆ÷¶Ë¶Ë¶Ï¿ª");
+		System.out.println("æœåŠ¡å™¨ç«¯ç«¯æ–­å¼€");
 
 		try {
 			client.close();
@@ -60,24 +62,34 @@ class ServerThread implements Runnable {
 	}
 
 	public void run() {
-		boolean runFlag = true;// ÔËĞĞ±ê¼Ç
+		boolean runFlag = true;// è¿è¡Œæ ‡è®°
 		String str = null;
 		while (runFlag) {
 			try {
-				str = bufferReader.readLine();// Ò»Ö±´¦ÓÚ¶ÄÈû×´Ì¬£¬³ı·ÇÓĞ"\n"
+				str = bufferReader.readLine();// ä¸€ç›´å¤„äºèµŒå¡çŠ¶æ€ï¼Œé™¤éæœ‰"\n"
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			System.out.println(str);
 
-			if (str == null) {// ³ÌĞò½áÊø
+			if (str == null) {// ç¨‹åºç»“æŸ
 				// out.println("byebye");
-				runFlag = false;// ÍË³öÑ­»·
-				System.out.println("´«ÊäÊı¾İÍ£Ö¹");
+				runFlag = false;// é€€å‡ºå¾ªç¯
+				System.out.println("ä¼ è¾“æ•°æ®åœæ­¢");
 			} else {
-				if(saveDataToDatabase(str)){
-					System.out.println("´æÈëÊı¾İ³É¹¦!");
+				boolean res=false;
+				if(str.startsWith("SenseData:")){
+					str=str.substring("SenseData:".length());
+					res=saveSenseDataToDatabase(str);
+				}else if(str.startsWith("RfidData:")){
+					str=str.substring("RfidData:".length());
+					//System.out.println(str);
+					res=saveRfidDataToDatabase(str);
 				}
+               if(!res)
+               {
+            	  System.out.println("æ’å…¥æ•°æ®åˆ°æ•°æ®åº“æ—¶é”™è¯¯");   
+               }
 			}
 		}
 
@@ -89,22 +101,22 @@ class ServerThread implements Runnable {
 
 	}
    /***
-    * ½«7¸ö¼à²âµã´«¸ĞÆ÷Êı¾İ´æÈëÊı¾İ¿â
+    * å°†7ä¸ªç›‘æµ‹ç‚¹ä¼ æ„Ÿå™¨æ•°æ®å­˜å…¥æ•°æ®åº“
     * ***/
-	public boolean saveDataToDatabase(String str) {
-		String data[] = str.split("#");// µÃµ½7¸ö¼à²âµãÊı¾İ,Ã¿¸ö¼à²âµãÊı¾İ¸ñÊ½Îª£º1-1-219.36-0.75-24.3-0.41
+	public boolean saveSenseDataToDatabase(String str) {
+		String data[] = str.split("#");// å¾—åˆ°7ä¸ªç›‘æµ‹ç‚¹æ•°æ®,æ¯ä¸ªç›‘æµ‹ç‚¹æ•°æ®æ ¼å¼ä¸ºï¼š1-1-219.36-0.75-24.3-0.41
 		SenseData senseData = new SenseData();
 		String detail[];
 		SenseDataDao dao=SenseDataDao.getInstance();
 		boolean res=false;
 		for (int i = 0; i < data.length; i++) {
-			detail = data[i].split("-");// µÃµ½£ºid, ¼à²âµãid,µçÑ¹£¬µçÁ÷£¬ÎÂ¶È£¬Êª¶È£¬¼ì²âÊ±¼ä
+			detail = data[i].split("-");// å¾—åˆ°ï¼šid, ç›‘æµ‹ç‚¹id,ç”µå‹ï¼Œç”µæµï¼Œæ¸©åº¦ï¼Œæ¹¿åº¦ï¼Œæ£€æµ‹æ—¶é—´
 			senseData.setId(Integer.parseInt(detail[0]));//id
-			senseData.setAddressId(Integer.parseInt(detail[1]));//¼à²âµãid
-			senseData.setVoltage(Float.parseFloat(detail[2]));//µçÑ¹Öµ
-			senseData.setCurrent(Float.parseFloat(detail[3]));  //µçÁ÷Öµ
-			senseData.setTemp(Float.parseFloat(detail[4]));  //ÎÂ¶ÈÖµ
-			senseData.setDampness(Float.parseFloat(detail[5]));//Êª¶ÈÖµ
+			senseData.setAddressId(Integer.parseInt(detail[1]));//ç›‘æµ‹ç‚¹id
+			senseData.setVoltage(Float.parseFloat(detail[2]));//ç”µå‹å€¼
+			senseData.setCurrent(Float.parseFloat(detail[3]));  //ç”µæµå€¼
+			senseData.setTemp(Float.parseFloat(detail[4]));  //æ¸©åº¦å€¼
+			senseData.setDampness(Float.parseFloat(detail[5]));//æ¹¿åº¦å€¼
 		    res = dao.saveSenseData(senseData);
 			if (!res) {
 				break;
@@ -113,5 +125,25 @@ class ServerThread implements Runnable {
 
 		return res;
 	}
-
+  public boolean saveRfidDataToDatabase(String str){
+	  String data[] = str.split("#");
+	  RfidData rfidData=new RfidData();
+	  String detail[];
+	  RfidDataDao rfidDataDao =RfidDataDao.getInstance();
+	  boolean res=false;
+	  for(int i=0;i<data.length;i++){
+		  detail=data[i].split("-");
+		  rfidData.setId(Integer.parseInt(detail[0]));
+		  rfidData.setAddressId(Integer.parseInt(detail[1]));
+		  rfidData.setProductId(Integer.parseInt(detail[2]));
+		  rfidData.setStateId(Integer.parseInt(detail[3]));
+		  res=rfidDataDao.saveRfidData(rfidData);
+		  if(!res){
+			  break;
+		  }
+			  
+		  
+	  }
+	  return res;
+  }
 }

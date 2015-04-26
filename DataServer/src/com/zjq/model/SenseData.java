@@ -2,12 +2,12 @@ package com.zjq.model;
 
 public class SenseData {
 	private int id;
-	private int addressId;//Éè±¸Id
-	private float voltage;// µçÑ¹
-	private float current;// µçÁ÷
-	private float temp;// ÎÂ¶È
-	private float dampness;// Êª¶È
-	private String update_time;//¼ì²âÊ±¼ä  £¬ÓĞÒ»¶¨µÄÈÕÆÚ¸ñÊ½£¬¾ßÌå¸ñÊ½¼ûÊı¾İ¿â¶ÔÓ¦×Ö¶Î
+	private int addressId;//è®¾å¤‡Id
+	private float voltage;// ç”µå‹
+	private float current;// ç”µæµ
+	private float temp;// æ¸©åº¦
+	private float dampness;// æ¹¿åº¦
+	private String update_time;//æ£€æµ‹æ—¶é—´  ï¼Œæœ‰ä¸€å®šçš„æ—¥æœŸæ ¼å¼ï¼Œå…·ä½“æ ¼å¼è§æ•°æ®åº“å¯¹åº”å­—æ®µ
 	public int getId() {
 		return id;
 	}

@@ -9,14 +9,14 @@ import com.zjq.tools.JDBConnection;
 
 public class SenseDataDao {
 	private static SenseDataDao instance = null;
-	private JDBConnection connection = null; // ¶¨ÒåÊı¾İ¿âÁ¬½ÓÀàJDBConnection ¶ÔÏó²¢¸³ÖµÎªnull
+	private JDBConnection connection = null; // å®šä¹‰æ•°æ®åº“è¿æ¥ç±»JDBConnection å¯¹è±¡å¹¶èµ‹å€¼ä¸ºnull
 
 	private SenseDataDao() {
 		connection = new JDBConnection();
 	}
 
 	/**
-	 * ·µ»ØÒ»¸öSenseDataDaoÊµÀı,µ¥ÀıÄ£Ê½
+	 * è¿”å›ä¸€ä¸ªSenseDataDaoå®ä¾‹,å•ä¾‹æ¨¡å¼
 	 * 
 	 * @return
 	 */
@@ -28,14 +28,14 @@ public class SenseDataDao {
 	}
 
 	/**
-	 * ±£´æ´«¸ĞÆ÷ĞÅÏ¢
+	 * ä¿å­˜ä¼ æ„Ÿå™¨ä¿¡æ¯
 	 * @param name
-	 * @return Èç¹ûÓÃ»§ĞÅÏ¢±£´æ³É¹¦£¬Ôò·µ»Øtrue,·ñÔò·µ»Øfalse
+	 * @return å¦‚æœç”¨æˆ·ä¿¡æ¯ä¿å­˜æˆåŠŸï¼Œåˆ™è¿”å›true,å¦åˆ™è¿”å›false
 	 */
 	public boolean saveSenseData(SenseData senseData){
 		String sql;
 		if (connection == null) {
-			connection = new JDBConnection();// ½«JDBC¶ÔÏó½øĞĞÊµÀı»¯
+			connection = new JDBConnection();// å°†JDBCå¯¹è±¡è¿›è¡Œå®ä¾‹åŒ–
 		}
 		
 		sql="insert into sense_data (`id`,`addressId`,`voltage`,`current`,`temp`,`dampness`) values ('"+senseData.getId()+"','"+senseData.getAddressId()+"','"+senseData.getVoltage()+"','"+senseData.getCurrent()+"','"+senseData.getTemp()+"','"+senseData.getDampness()+"') on duplicate key update addressId='"+senseData.getAddressId()+"' ,voltage='"+senseData.getVoltage()+"' ,"+

@@ -20,15 +20,18 @@ public class Client {
 		 
 		   int i=0;
 		   while( i<30){
-			   i++;
-			   out.write(getSenseData());
-			   out.flush();
-			   Thread.sleep(500);//Ã¿500ms·¢ËÍÐÝÃßÒ»´Î
-			 
 			   
+			   if(i%2==0){//å¶æ•°æ¬¡å‘ä¼ æ„Ÿå™¨æ•°æ®
+			    out.write(getSenseData());
+			   }else{//å¥‡æ•°æ¬¡å‘RFIDæ•°æ®
+			    out.write(getRfidData());
+			   }
+			   out.flush();
+			   i++;
+			   Thread.sleep(500);
 		   }
 	   }catch(Exception e){
-		   System.out.println("·þÎñÆ÷ÒÑ¾­¶Ï¿ª£¡"+e);
+		   System.out.println("æœåŠ¡å™¨å·²ç»æ–­å¼€ï¼"+e);
 	   }finally{
 		   try {
 			 out.close();
@@ -41,19 +44,32 @@ public class Client {
 	   }
    }
    /****
-    * µÃµ½7¸ö¼ì²âµãµÄÊý¾Ý£¬Êý¾Ý¸ñÊ½Îª:
-    *  id-¼à²âµãId-µçÑ¹Öµ-µçÁ÷Öµ-ÎÂ¶ÈÖµ-Êª¶ÈÖµ#
+    * å¾—åˆ°7ä¸ªæ£€æµ‹ç‚¹çš„æ•°æ®ï¼Œæ•°æ®æ ¼å¼ä¸º:
+    *  id-ç›‘æµ‹ç‚¹Id-ç”µåŽ‹å€¼-ç”µæµå€¼-æ¸©åº¦å€¼-æ¹¿åº¦å€¼#
     *  eg:1-1-220.52-1.99-24.24-0.51#2-2-220.52-1.99-24.24-0.51
     * 
     * ****/
    public static String getSenseData(){
 	   Random random=new Random();
-	   StringBuffer senseData=new StringBuffer();
+	   StringBuffer senseData=new StringBuffer("SenseData:");
 	   for(int i=1;i<7;i++){
 		   senseData.append(i+"-"+RandomData.getSenseDataByAddrId(i, random)+"#");
 	   }
 	   senseData.append("7"+"-"+RandomData.getSenseDataByAddrId(7, random)+"\r\n");
 	   return senseData.toString();
+   }
+   /*******
+    * å¾—åˆ°5ä¸ªRFIDç›‘æµ‹ç‚¹çš„æ•°æ®ï¼Œæ•°æ®æ ¼å¼ä¸º
+    * id-ç›‘æµ‹ç‚¹id-äº§å“ç¼–å·Id-åŠ å·¥ç¨‹åº¦id
+    * ******/
+   public static String getRfidData(){
+	   Random random=new Random();
+	   StringBuffer rfidData=new StringBuffer("RfidData:");
+	   for(int i=0;i<4;i++){
+		   rfidData.append(i+"-"+RandomData.getRfidDataByAddrId(i, random)+"#");
+	   }
+	   rfidData.append("4"+"-"+RandomData.getRfidDataByAddrId(4, random)+"\r\n");
+	   return rfidData.toString();
    }
 }
 
